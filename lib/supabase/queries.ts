@@ -16,6 +16,7 @@ export async function fetchGroupedEntries() {
         .from('diary_entries')
         .select('*')
         .eq('user_id', user.id)
+        .is('deleted_at', null)
         .order('entry_date', { ascending: false });
 
     if (error || !entries) {

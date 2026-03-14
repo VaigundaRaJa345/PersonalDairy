@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
-import { Book, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Book, Eye, EyeOff, Loader2, Sparkles, ShieldCheck, Zap } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AuthForm() {
     const [email, setEmail] = useState('');
@@ -41,7 +42,7 @@ export default function AuthForm() {
                     },
                 });
                 if (error) throw error;
-                setSuccessMsg('Check your email for the confirmation link!');
+                setSuccessMsg('Magical link sent! Check your inbox.');
             }
         } catch (err: any) {
             setError(err.message || 'An error occurred during authentication.');
@@ -51,87 +52,123 @@ export default function AuthForm() {
     };
 
     return (
-        <div className="w-full max-w-md w-full bg-white rounded-2xl shadow-sm border border-[#E5E7EB] p-8">
-            <div className="text-center mb-8">
-                <Book className="w-10 h-10 text-[#111827] mx-auto mb-4" />
-                <h2 className="text-2xl font-playfair font-semibold text-[#111827]">
-                    {isLogin ? 'Welcome Back' : 'Create Account'}
+        <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full max-w-md bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-white/20 p-10 relative overflow-hidden"
+        >
+            {/* Ambient Background Elements */}
+            <div className="absolute -top-24 -right-24 w-48 h-48 bg-indigo-100 rounded-full blur-3xl opacity-50" />
+            <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-emerald-50 rounded-full blur-3xl opacity-50" />
+
+            <div className="text-center mb-10 relative">
+                <motion.div 
+                    whileHover={{ scale: 1.05, rotate: 5 }}
+                    className="w-16 h-16 bg-[#111827] rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg"
+                >
+                    <Book className="w-8 h-8 text-white" />
+                </motion.div>
+                <h2 className="text-3xl font-playfair font-bold text-[#111827] tracking-tight">
+                    {isLogin ? 'Welcome Back' : 'Get Started'}
                 </h2>
-                <p className="text-gray-500 text-sm mt-2">
-                    {isLogin ? 'Enter your details to access your journal.' : 'Start your automated journaling journey.'}
+                <p className="text-gray-500 text-sm mt-3 font-medium">
+                    {isLogin ? 'Secure access to your personal sanctuary.' : 'Join the most aesthetic journaling experience.'}
                 </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {error && (
-                    <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg">
-                        {error}
-                    </div>
-                )}
-                
-                {successMsg && (
-                    <div className="p-3 text-sm text-green-600 bg-green-50 border border-green-100 rounded-lg">
-                        {successMsg}
-                    </div>
-                )}
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className="w-full px-4 py-2.5 rounded-lg border border-[#E5E7EB] focus:ring-1 focus:ring-[#111827] focus:outline-none transition-all"
-                        placeholder="you@example.com"
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <div className="relative">
-                        <input
-                            type={showPassword ? 'text' : 'password'}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            className="w-full pl-4 pr-10 py-2.5 rounded-lg border border-[#E5E7EB] focus:ring-1 focus:ring-[#111827] focus:outline-none transition-all"
-                            placeholder="••••••••"
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            <form onSubmit={handleSubmit} className="space-y-6 relative">
+                <AnimatePresence mode="wait">
+                    {error && (
+                        <motion.div 
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="p-4 text-xs font-medium text-red-600 bg-red-50/50 border border-red-100 rounded-2xl flex items-center gap-2"
                         >
-                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                        </button>
+                            <Sparkles className="w-4 h-4 flex-shrink-0" />
+                            {error}
+                        </motion.div>
+                    )}
+                    
+                    {successMsg && (
+                        <motion.div 
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="p-4 text-xs font-medium text-emerald-600 bg-emerald-50/50 border border-emerald-100 rounded-2xl flex items-center gap-2"
+                        >
+                            <ShieldCheck className="w-4 h-4 flex-shrink-0" />
+                            {successMsg}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                <div className="space-y-4">
+                    <div className="group">
+                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Email Address</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            className="w-full px-5 py-3.5 rounded-2xl bg-gray-50 border border-transparent focus:bg-white focus:border-gray-200 focus:ring-4 focus:ring-gray-100/50 focus:outline-none transition-all duration-300 text-sm font-medium"
+                            placeholder="hello@sanctuary.com"
+                        />
+                    </div>
+
+                    <div className="group">
+                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Secure Password</label>
+                        <div className="relative">
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                className="w-full pl-5 pr-12 py-3.5 rounded-2xl bg-gray-50 border border-transparent focus:bg-white focus:border-gray-200 focus:ring-4 focus:ring-gray-100/50 focus:outline-none transition-all duration-300 text-sm font-medium"
+                                placeholder="••••••••"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500 transition-colors"
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <button
+                <motion.button
+                    whileTap={{ scale: 0.98 }}
                     type="submit"
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#111827] hover:bg-gray-800 text-white rounded-lg font-medium transition-colors mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full flex items-center justify-center gap-3 py-4 px-6 bg-[#111827] hover:bg-black text-white rounded-2xl font-semibold tracking-wide transition-all duration-300 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.2)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.3)] disabled:opacity-70 disabled:cursor-not-allowed group"
                 >
-                    {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-                    {isLogin ? 'Sign In' : 'Sign Up'}
-                </button>
+                    {loading ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                        <>
+                            {isLogin ? 'Unlock Journal' : 'Create Sanctuary'}
+                            <Zap className="w-4 h-4 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
+                        </>
+                    )}
+                </motion.button>
             </form>
 
-            <div className="mt-6 text-center">
+            <div className="mt-8 text-center relative pt-6 border-t border-gray-100">
                 <button
                     onClick={() => {
                         setIsLogin(!isLogin);
                         setError(null);
                         setSuccessMsg(null);
                     }}
-                    className="text-sm text-gray-500 hover:text-[#111827] transition-colors"
+                    className="text-xs font-bold text-gray-400 hover:text-[#111827] uppercase tracking-widest transition-colors flex items-center justify-center gap-2 mx-auto"
                 >
                     {isLogin 
-                        ? "Don't have an account? Sign up" 
-                        : "Already have an account? Sign in"}
+                        ? (<span>No account? <span className="text-[#111827]">Sign Up</span></span>)
+                        : (<span>Already joined? <span className="text-[#111827]">Log In</span></span>)}
                 </button>
             </div>
-        </div>
+        </motion.div>
     );
 }
