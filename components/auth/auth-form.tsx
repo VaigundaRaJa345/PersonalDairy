@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { Book, Eye, EyeOff, Loader2 } from 'lucide-react';
 
@@ -15,7 +15,7 @@ export default function AuthForm() {
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
     const router = useRouter();
-    const supabase = createClientComponentClient();
+    const supabase = createClient();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
