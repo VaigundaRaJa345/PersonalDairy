@@ -3,13 +3,15 @@
 import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, isToday, isYesterday, isWithinInterval, startOfDay, endOfDay } from 'date-fns';
-import { Search, Filter, Trash2, Download, FileText, Package, CheckSquare, Square, Share2, ArrowLeft, Archive } from 'lucide-react';
+import { Search, Filter, Trash2, Download, FileText, Package, CheckSquare, Square, Share2, ArrowLeft, Archive, X } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 import EntryCard from './entry-card';
 import EntryDetailModal from './entry-detail-modal';
 import { DiaryEntry } from '@/types/diary';
 import { exportToPDF, exportToZIP } from '@/lib/export-utils';
 import confetti from 'canvas-confetti';
+import { cn } from '@/lib/utils';
+
 
 export default function Timeline({ initialGroupedEntries }: { initialGroupedEntries: Record<string, DiaryEntry[]> }) {
     const [entries, setEntries] = useState<DiaryEntry[]>(Object.values(initialGroupedEntries).flat());
@@ -209,6 +211,3 @@ export default function Timeline({ initialGroupedEntries }: { initialGroupedEntr
     );
 }
 
-// Helper utility (should move to lib/utils.ts ideally)
-import { cn } from '@/lib/utils';
-import { X } from 'lucide-react';
