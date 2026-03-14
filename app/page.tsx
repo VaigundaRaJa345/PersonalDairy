@@ -14,7 +14,7 @@ export default function Home() {
         </p>
 
         <Link
-          href="/dashboard"
+          href="/login"
           className="inline-flex items-center gap-2 px-6 py-3 bg-[#111827] text-white rounded-full font-medium tracking-wide hover:bg-gray-800 transition-colors shadow-sm"
         >
           Open Journal <ArrowRight className="w-4 h-4" />
