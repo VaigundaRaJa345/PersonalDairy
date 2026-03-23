@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display, Caveat } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -9,6 +9,11 @@ const inter = Inter({
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
+  subsets: ["latin"],
+});
+
+const handwritten = Caveat({
+  variable: "--font-handwritten",
   subsets: ["latin"],
 });
 
@@ -24,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${inter.variable} ${playfair.variable} antialiased bg-[#F9FAFB] text-[#111827]`}>
+      <body className={`${inter.className} ${inter.variable} ${playfair.variable} ${handwritten.variable} antialiased bg-[#F9FAFB] text-[#111827]`}>
         {children}
       </body>
     </html>

@@ -19,3 +19,7 @@ body {
   color: var(--foreground);
   font-family: inherit;
 }
+
+@utility font-handwritten {
+  font-family: var(--font-handwritten);
+}
